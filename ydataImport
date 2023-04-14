@@ -1,0 +1,13 @@
+% Y DATA IMPORT
+
+function [y1A, y1B, y1C, y2A, y2B, y2C] = ydataImport(i)
+
+y1A = importdata('y1A.txt'); y2A = importdata('y2A.txt');
+y1B = importdata('y1B.txt'); y2B = importdata('y2B.txt');
+y1C = importdata('y1C.txt'); y2C = importdata('y2C.txt');
+
+y1A = y1A(i); y2A = y2A(i);
+y1B = y1B(i); y2B = y2B(i);
+y1C = y1C(i); y2C = y2C(i);
+
+end

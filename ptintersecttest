@@ -1,0 +1,88 @@
+% POINT INTERSECTION TEST
+
+function [indicesbob, minmOisdiff, verticesmin0] = ptintersecttest(...
+    expectedarraysdumms, indicesbest, fitparams)
+% Filters best chi-squared results based on the points of intersection of
+% the linear fits, from which the expecteddumms are extracted.
+% indicesbob has two lines for two values, each for one track.
+
+c = fitparams;
+file1 = fopen('vertices.txt', 'w');
+file2 = fopen('indicesbobdumms.txt', 'w');
+file3 = fopen('mOisdiffdumms.txt', 'w');
+file4 = fopen('verticesmin0dumms.txt', 'w');
+
+for i = linspace(1, length(indicesbest), length(indicesbest))
+    ii = indicesbest(i);
+    for j = linspace(1, length(indicesbest), length(indicesbest))
+        jj = indicesbest(j);
+        lfitdumm1 = expectedarraysdumms(ii + 2*(ii-1), :);
+        mfitdumm1 = expectedarraysdumms(ii + 2*(ii-1) + 1, :);
+        nfitdumm1 = expectedarraysdumms(ii + 2*(ii-1) + 2, :);
+        
+        lfitdumm2 = expectedarraysdumms(jj + 2*(jj-1), :);
+        mfitdumm2 = expectedarraysdumms(jj + 2*(jj-1) + 1, :);
+        nfitdumm2 = expectedarraysdumms(jj + 2*(jj-1) + 2, :);
+    
+        % Intersection calculator.
+        p1 = polyfit(nfitdumm1, lfitdumm1, 1);
+        p2 = polyfit(nfitdumm2, lfitdumm2, 1);
+                    % fit linear polynomial.
+
+        nO = fzero(@(n) polyval(p1-p2, n), 3);
+        lO = polyval(p1, nO);
+                    % calculate intersection.
+        
+%         [nO, lO] = polyxpoly(nfitdumm1, lfitdumm1, nfitdumm2, lfitdumm2);
+        mO1 = (c(ii, 1) .* nO + c(ii, 2) .* lO + c(ii, 3));
+        mO2 = (c(jj, 1) .* nO + c(jj, 2) .* lO + c(jj, 3));
+        mO = (mO1 + mO2) / 2;
+        vO = [lO mO nO];
+        
+        if nO < 2.40 && nO > -4.80+2.4 && lO > -1.5 && lO < 1.5
+                                            % these conditions are always
+                                            % true for the null and first
+                                            % transformations.
+              
+            fprintf(file1, '%5f %5f %5f \n', vO);
+            fprintf(file2, '%5f %5f \n', ii, jj); % only ii is necessary to avoid 
+                                          % repetition.
+            fprintf(file3, '%5f \n', abs(mO1 - mO2));
+            fprintf(file4, '%5f \n', sqrt(lO^2 + mO^2 + nO^2));
+        end
+    end
+end
+
+vertices = importdata('vertices.txt');
+% Handle as matrix.
+csvwrite('vertices.txt', vertices);
+vertices = importdata('vertices.txt');
+
+indicesbobdumms = importdata('indicesbobdumms.txt');
+% Handle as matrix.
+csvwrite('indicesbobdumms.txt', indicesbobdumms);
+indicesbobdumms = importdata('indicesbobdumms.txt');
+
+mOisdiffdumms = importdata('mOisdiffdumms.txt');
+% Handle as matrix.
+csvwrite('mOisdiffdumms.txt', mOisdiffdumms);
+mOisdiffdumms = importdata('mOisdiffdumms.txt');
+
+verticesmin0dumms = importdata('verticesmin0dumms.txt');
+% Handle as matrix.
+csvwrite('verticesmin0dumms.txt', verticesmin0dumms);
+verticesmin0dumms = importdata('verticesmin0dumms.txt');
+
+% Look at miminal distance filter.
+if isempty(indicesbobdumms) == 0
+    [indicesbob, minmOisdiff, verticesmin0] = mindistfilter(mOisdiffdumms, indicesbobdumms, verticesmin0dumms);
+else    % this part deals with the times when the code does not find any
+        % good fit at all. This happens very often (if not all of the
+        % times) at the extreme rotation angles of the decay plane: 0, 90,
+        % 180, 270, and 360 degrees.
+    indicesbob = [0 0];
+    minmOisdiff = 0;
+    verticesmin0 = 0;
+end
+
+end

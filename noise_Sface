@@ -1,0 +1,55 @@
+% NOISE IN "STRAIGHT AHEAD" BOX FACE
+
+function [nsx, nsy, nsz] = noise_Sface(nNoiseA, nNoiseB, nNoiseC)
+
+maxnNoise = max([nNoiseA, nNoiseB, nNoiseC]);
+
+nsx = zeros(maxnNoise, 3);
+nsy = zeros(maxnNoise, 3);
+nsz = zeros(maxnNoise, 3);
+
+diffmaxA = maxnNoise - nNoiseA;
+diffmaxB = maxnNoise - nNoiseB;
+diffmaxC = maxnNoise - nNoiseC;
+
+% Fill in spaces with noise; those not filled with noise are filled with
+% NaN.
+for box = linspace(1, 3, 3)
+    nNoise = 0; diffmax = 0;
+    if box == 1
+        nNoise = nNoiseA; diffmax = diffmaxA;
+    elseif box == 2
+        nNoise = nNoiseB; diffmax = diffmaxB;
+    elseif box == 3
+        nNoise = nNoiseC; diffmax = diffmaxC;
+    end
+    
+    for j = linspace(1, nNoise, nNoise)
+        if box == 1
+            maxN = 1.5; minN = -1.5;
+            %nsx(j, box) = 1.5 * rand(1);
+            %nsy(j, box) = 1.5 * rand(1);
+            nsx(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsy(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsz(j, box) = -4.80+2.40;
+        elseif box == 2
+            maxN = 1.8; minN = -1.8;
+            nsx(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsy(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsz(j, box) = -5.30+2.40;
+        elseif box == 3
+            maxN = 2.1; minN = -2.1;
+            nsx(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsy(j, box) = (maxN-minN).*rand(1,1)+minN;
+            nsz(j, box) = -5.60+2.40;
+        end
+    end
+    
+    for j = linspace(nNoise + 1, nNoise + diffmax, diffmax)
+        nsx(j, box) = nan; 
+        nsy(j, box) = nan;
+        nsz(j, box) = nan;
+    end
+end
+
+end

@@ -1,0 +1,56 @@
+Author: Alejandro Alberto Salazar Lobos as part of the Masters Thesis "Searching for Non-Standard Model Highly Ionizing Processes and Long-Lived 
+Neutral Particles With the MoEDAL-MAPP Detector" at the University of Alberta
+
+The following codes should be run in the environments and order indicated
+
+Part 1: Simulated Real Decay Algorithm (for Python)
+
+The following code generates a simulated real decay, and it is based on the geometrical arguments presented in the "Geometric Arguments" pdf file:
+01 vertexGenerator
+02 boxGenerator
+03 boxSelector
+
+Part 2: Vertex Reconstruction Algorithm (for Matlab)
+
+The following code is presented in the order in which it is used. The purpose of this algorithm is to reconstruct the simulated real vertices generated 
+with the code in Part 1:
+01 correctReconstructionCounts
+02 comparisonLoop
+03 Data Import:
+  03-1 xdataImport
+  03-2 ydataImport
+  03-3 zdataImport
+  03-4 inputGenerated
+04 dataDuplication
+05 Noise Generation:
+  05-1 nNoise
+  05-2 noise_Sface
+  05-3 noise_Lface
+  05-4 noise_Rface
+  05-5 noise_BMface
+  05-6 noise_Tface
+06 goodnessOfFit
+07 Classify Data Into Observed and Expected:
+  07-1 linfit3DptsSelector_Sface
+  07-2 linfit3Dpts_Sface
+  07-3 linfit2Dparams_Sface
+  07-4 linfit3Dparams_Sface
+  07-5 linfit3ptsSelector_Lface
+  07-6 linfit3pts_Lface
+  07-7 linfit3ptsSelector_Rface
+  07-8 linfit3pts_Rface
+  07-9 linfit2Dparams_LRfaces
+  07-10 linfit3Dparams_LRfaces
+  07-11 linfit3DptsSelector_BMface
+  07-12 linfit3Dpts_BMface
+  07-13 linfit3DptsSelector_Tface
+  07-14 linfit3Dpts_Tface
+  07-15 linfit2Dparams_TBMfaces
+  07-16 linfit3Dparams_TBMfaces
+08 Chi-Square Test
+  08-1 chi2test
+  08-2 chi2comp1best
+09 Point Intersection Test
+  09-1 ptintersecttest
+  09-2 sumation
+

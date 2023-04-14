@@ -1,0 +1,286 @@
+% GOODNESS OF FIT
+
+function [bestl, bestm, bestn, minmOisdiff, verticesmin0] = goodnessOfFit(l, m, n)
+% bestc = [] matrix row 1 <-> track1, row 2 <-> track2, column 1, 2, 3 <->
+% planes A, B, C, respectively.
+
+%%%%%%%%%% CLASSIFY DATA INTO OBSERVED AND EXPECTED %%%%%%%%%%
+% The observed data is as received from l, m, n.
+% The expected data is as extracted from the linear fits based on l, m, n.
+
+sz = size(l);
+% sz stands for size.
+
+file1 = fopen('observeddumms.txt', 'w'); % Fed by input l, m, n.
+                                    % column 1 <-> planeA, column 2 <->
+                                    % planeB, column 3 <-> planeC.
+                                    % In steps of 3 rows, 1st row <-> lfit,
+                                    % 2nd row <-> mfit, 3rd row <-> nfit.
+                                    
+file2 = fopen('expecteddumms.txt', 'w'); % Fed by fitdumms.
+                                    % column 1 <-> planeA, column 2 <->
+                                    % planeB, column 3 <-> planeC.
+                                    % In steps of 3 rows, 1st row <-> lfit,
+                                    % 2nd row <-> mfit, 3rd row <-> nfit.
+file3 = fopen('fitparamsdumms.txt', 'w');
+
+% file4 = fopen('expectedarraysdumms.txt', 'w');
+                    % (A). See green blocked marked with an (A) in coming
+                    % for loop.
+file4 = fopen('expectedarraysdumms.txt', 'wt');   % the term array is used
+                                                % matrices including the
+                                                % points at n = -4.80,
+                                                % -5.30, -5.60, and some
+                                                % other point(s) at some
+                                                % other corresponding
+                                                % n('s).
+
+% perm stands for permitations.
+for i = linspace(1, sz(1), sz(1))
+    for j = linspace(1, sz(1), sz(1))
+        for k = linspace(1, sz(1), sz(1))
+            ldumm = [l(i, 1) l(j, 2) l(k, 3)];
+            mdumm = [m(i, 1) m(j, 2) m(k, 3)];
+            ndumm = [n(i, 1) n(j, 2) n(k, 3)];
+            
+            if ndumm == [-4.80+2.40 -5.30+2.40 -5.60+2.40] % for S face.
+                fprintf(file1, '%5f %5f %5f \n', ldumm, mdumm, ndumm);
+                
+                % This code block goes inside the if statement to make the
+                % indices in the matrices observeddumms and expecteddumms
+                % coincide.
+                [lfitdumm, mfitdumm, nfitdumm, cdumm] = ...
+                    linfit3DptsSelector_Sface(ldumm, mdumm, ndumm);
+                fprintf(file2, '%5f %5f %5f \n', lfitdumm, mfitdumm, ...
+                    nfitdumm);
+                fprintf(file3, '%5f %5f %5f \n', cdumm);
+                
+%                 [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+%                      linfit3DptsSelector2(ldumm, mdumm, ndumm);
+%                 fprintf(file4, '%5f %5f %5f \n', lfitarraydumm, ...
+%                     mfitarraydumm, nfitarraydumm);
+                                            % this method does not work.
+                                            % Any code marked with (A) is
+                                            % associated with this green
+                                            % section. Left as a reminder
+                                            % not to try this method.
+                
+                [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+                    linfit3Dpts_Sface(ldumm, mdumm, ndumm);
+                
+                fitarraysdumm = [lfitarraydumm; mfitarraydumm; nfitarraydumm]';
+                
+                for o = 1:3 % 3 dimesions.
+                    for p = 1:length(nfitarraydumm)
+                        fprintf(file4, '%5f \t', fitarraysdumm(p, o));
+                        if p == length(nfitarraydumm)
+                            fprintf(file4, ' \n');
+                        end
+                    end
+                end
+            end
+            if ldumm == [-1.5 -1.8 -2.1] % for L face.
+                %ldumm; mdumm; ndumm;
+                fprintf(file1, '%5f %5f %5f \n', ldumm, mdumm, ndumm);
+                
+                % This code block goes inside the if statement to make the
+                % indices in the matrices observeddumms and expecteddumms
+                % coincide.
+                [lfitdumm, mfitdumm, nfitdumm, cdumm] = ...
+                    linfit3DptsSelector_Lface(ldumm, mdumm, ndumm);
+                fprintf(file2, '%5f %5f %5f \n', lfitdumm, mfitdumm, ...
+                    nfitdumm);
+                fprintf(file3, '%5f %5f %5f \n', cdumm);
+                
+%                 [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+%                      linfit3DptsSelector2(ldumm, mdumm, ndumm);
+%                 fprintf(file4, '%5f %5f %5f \n', lfitarraydumm, ...
+%                     mfitarraydumm, nfitarraydumm);
+                                            % this method does not work.
+                                            % Any code marked with (A) is
+                                            % associated with this green
+                                            % section. Left as a reminder
+                                            % not to try this method.
+                
+                [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+                    linfit3Dpts_Lface(ldumm, mdumm, ndumm);
+                
+                fitarraysdumm = [lfitarraydumm; mfitarraydumm; nfitarraydumm]';
+                
+                for o = 1:3 % 3 dimesions.
+                    for p = 1:length(nfitarraydumm)
+                        fprintf(file4, '%5f \t', fitarraysdumm(p, o));
+                        if p == length(nfitarraydumm)
+                            fprintf(file4, ' \n');
+                        end
+                    end
+                end
+                
+            end
+            if ldumm == [1.5 1.8 2.1] % for R face.
+                %ldumm;
+                fprintf(file1, '%5f %5f %5f \n', ldumm, mdumm, ndumm);
+                
+                % This code block goes inside the if statement to make the
+                % indices in the matrices observeddumms and expecteddumms
+                % coincide.
+                [lfitdumm, mfitdumm, nfitdumm, cdumm] = ...
+                    linfit3DptsSelector_Rface(ldumm, mdumm, ndumm);
+                fprintf(file2, '%5f %5f %5f \n', lfitdumm, mfitdumm, ...
+                    nfitdumm);
+                fprintf(file3, '%5f %5f %5f \n', cdumm);
+                
+%                 [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+%                      linfit3DptsSelector2(ldumm, mdumm, ndumm);
+%                 fprintf(file4, '%5f %5f %5f \n', lfitarraydumm, ...
+%                     mfitarraydumm, nfitarraydumm);
+                                            % this method does not work.
+                                            % Any code marked with (A) is
+                                            % associated with this green
+                                            % section. Left as a reminder
+                                            % not to try this method.
+                
+                [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+                    linfit3Dpts_Rface(ldumm, mdumm, ndumm);
+                
+                fitarraysdumm = [lfitarraydumm; mfitarraydumm; nfitarraydumm]';
+                
+                for o = 1:3 % 3 dimesions.
+                    for p = 1:length(nfitarraydumm)
+                        fprintf(file4, '%5f \t', fitarraysdumm(p, o));
+                        if p == length(nfitarraydumm)
+                            fprintf(file4, ' \n');
+                        end
+                    end
+                end
+                
+            end
+            if mdumm == [-1.5 -1.8 -2.1] % for L face.
+                %ldumm; mdumm; ndumm;
+                fprintf(file1, '%5f %5f %5f \n', ldumm, mdumm, ndumm);
+                
+                % This code block goes inside the if statement to make the
+                % indices in the matrices observeddumms and expecteddumms
+                % coincide.
+                [lfitdumm, mfitdumm, nfitdumm, cdumm] = ...
+                    linfit3DptsSelector_BMface(ldumm, mdumm, ndumm);
+                fprintf(file2, '%5f %5f %5f \n', lfitdumm, mfitdumm, ...
+                    nfitdumm);
+                fprintf(file3, '%5f %5f %5f \n', cdumm);
+                
+%                 [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+%                      linfit3DptsSelector2(ldumm, mdumm, ndumm);
+%                 fprintf(file4, '%5f %5f %5f \n', lfitarraydumm, ...
+%                     mfitarraydumm, nfitarraydumm);
+                                            % this method does not work.
+                                            % Any code marked with (A) is
+                                            % associated with this green
+                                            % section. Left as a reminder
+                                            % not to try this method.
+                
+                [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+                    linfit3Dpts_BMface(ldumm, mdumm, ndumm);
+                
+                fitarraysdumm = [lfitarraydumm; mfitarraydumm; nfitarraydumm]';
+                
+                for o = 1:3 % 3 dimesions.
+                    for p = 1:length(nfitarraydumm)
+                        fprintf(file4, '%5f \t', fitarraysdumm(p, o));
+                        if p == length(nfitarraydumm)
+                            fprintf(file4, ' \n');
+                        end
+                    end
+                end
+                
+            end
+            if mdumm == [1.5 1.8 2.1] % for R face.
+                %ldumm;
+                fprintf(file1, '%5f %5f %5f \n', ldumm, mdumm, ndumm);
+                
+                % This code block goes inside the if statement to make the
+                % indices in the matrices observeddumms and expecteddumms
+                % coincide.
+                [lfitdumm, mfitdumm, nfitdumm, cdumm] = ...
+                    linfit3DptsSelector_Tface(ldumm, mdumm, ndumm);
+                fprintf(file2, '%5f %5f %5f \n', lfitdumm, mfitdumm, ...
+                    nfitdumm);
+                fprintf(file3, '%5f %5f %5f \n', cdumm);
+                
+%                 [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+%                      linfit3DptsSelector2(ldumm, mdumm, ndumm);
+%                 fprintf(file4, '%5f %5f %5f \n', lfitarraydumm, ...
+%                     mfitarraydumm, nfitarraydumm);
+                                            % this method does not work.
+                                            % Any code marked with (A) is
+                                            % associated with this green
+                                            % section. Left as a reminder
+                                            % not to try this method.
+                
+                [lfitarraydumm, mfitarraydumm, nfitarraydumm] = ...
+                    linfit3Dpts_Tface(ldumm, mdumm, ndumm);
+                
+                fitarraysdumm = [lfitarraydumm; mfitarraydumm; nfitarraydumm]';
+                
+                for o = 1:3 % 3 dimesions.
+                    for p = 1:length(nfitarraydumm)
+                        fprintf(file4, '%5f \t', fitarraysdumm(p, o));
+                        if p == length(nfitarraydumm)
+                            fprintf(file4, ' \n');
+                        end
+                    end
+                end
+                
+            end
+        end
+    end
+end
+% We have #ways sets of fitted l, m, n per planes A, B, C.
+
+observeddumms = importdata('observeddumms.txt');
+% Access observeddumms as matrix.
+csvwrite('observeddumms.txt', observeddumms)
+observeddumms = importdata('observeddumms.txt');
+
+expecteddumms = importdata('expecteddumms.txt');
+% Access expecteddumms as matrix.
+csvwrite('expecteddumms.txt', expecteddumms);
+expecteddumms = importdata('expecteddumms.txt');
+
+fitparamsdumms = importdata('fitparamsdumms.txt');
+% Access as matrix.
+csvwrite('fitparamsdumms.txt', fitparamsdumms);
+fitparamsdumms = importdata('fitparamsdumms.txt');
+
+expectedarraysdumms = importdata('expectedarraysdumms.txt');
+% Access as matrix.
+csvwrite('expectedarraysdumms.txt', expectedarraysdumms);
+expectedarraysdumms = importdata('expectedarraysdumms.txt');
+
+
+%%%%%%%%%% CHI-SQUARED TEST %%%%%%%%%%
+sigma = 0.005;
+chi2comp1 = chi2test(observeddumms, expecteddumms, sigma);
+    % nulltrans stands for null transformation.
+
+% Best chi-squared compared to 1 index extraction.
+indicesbest = chi2comp1best(chi2comp1);
+
+%%%%%%%%%% POINT OF INTERSECTION TEST %%%%%%%%%%
+[indicesbob, minmOisdiff, verticesmin0] = ptintersecttest(expectedarraysdumms, ... 
+    indicesbest, fitparamsdumms);
+if minmOisdiff == 0 % this part deals with the times when the code does not
+                    % find any good fit at all. This happens very often (if
+                    % not all of the times) at the extreme rotation angles
+                    % of the decay plane: 0, 90, 180, 270, and 360 degrees.
+    bestl = []; bestm = []; bestn = []; minmOisdiff = [];
+else
+    bestl = [observeddumms(indicesbob(1) + 2*(indicesbob(1) - 1), :); ...
+        observeddumms(indicesbob(2) + 2*(indicesbob(2) - 1), :)];
+    bestm = [observeddumms(indicesbob(1) + 2*(indicesbob(1) - 1) + 1, :); ...
+        observeddumms(indicesbob(2) + 2*(indicesbob(2) - 1) + 1, :)];
+    bestn = [observeddumms(indicesbob(1) + 2*(indicesbob(1) - 1) + 2, :); ...
+        observeddumms(indicesbob(2) + 2*(indicesbob(2) - 1) + 2, :)];
+                        % row 1, 2 <-> track 1, 2, respectively.
+end
+
+end

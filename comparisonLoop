@@ -1,0 +1,119 @@
+% COMPARISON LOOP
+
+function [count, verticesmin0] = comparisonLoop
+
+%%%%%%%%%% DATA IMPORT %%%%%%%%%%
+[x1A, x1B, x1C, x2A, x2B, x2C] = xdataImport(1);
+[y1A, y1B, y1C, y2A, y2B, y2C] = ydataImport(1);
+[z1A, z1B, z1C, z2A, z2B, z2C] = zdataImport(1);
+
+xinput = inputGenerated(x1A, x1B, x1C, x2A, x2B, x2C);
+yinput = inputGenerated(y1A, y1B, y1C, y2A, y2B, y2C);
+zinput = inputGenerated(z1A, z1B, z1C, z2A, z2B, z2C);
+% x, y, z matrices: row1 <-> track1, row2 <-> track2, column1 <-> planeA,
+% column2 <-> planeB, column3 <-> planeC.
+
+%%%%%%%%%% DATA DUPLICATION %%%%%%%%%%
+if z1A == -2.40
+    smx = duplication(xinput);
+    smy = duplication(yinput);
+    smz = zinput;
+elseif x1A == -1.50
+    smx = xinput;
+    smy = duplication(yinput);
+    smz = duplication(zinput);
+elseif y1A == -1.50
+    smx = duplication(xinput);
+    smy = yinput;
+    smz = duplication(zinput);
+
+% smx, smy, smz matrices: row1 <-> track1, row2 <-> track2, column1 <-> 
+% planeA, column2 <-> planeB, column3 <-> planeC. smx stands for 
+% 'smeared x'. Refers to the Gaussian smearing around the GENERATED point
+% x.
+
+%%%%%%%%%% NOISE GENERATION %%%%%%%%%%
+[nNoiseA, nNoiseB, nNoiseC] = nNoise;
+% Generates number of noise points per plane.
+
+[nsxS, nsyS, nszS] = noise_Sface(nNoiseA, nNoiseB, nNoiseC);
+[nsxL, nsyL, nszL] = noise_Lface(nNoiseA, nNoiseB, nNoiseC);
+[nsxR, nsyR, nszR] = noise_Rface(nNoiseA, nNoiseB, nNoiseC);
+[nsxBM, nsyBM, nszBM] = noise_BMface(nNoiseA, nNoiseB, nNoiseC);
+[nsxT, nsyT, nszT] = noise_Tface(nNoiseA, nNoiseB, nNoiseC);
+% Creates noise points as directed by the number of noise points per plane
+% from nNoise.
+% nsx, nsy, nsz matrices: column1 <-> planeA, column2 <-> planeB, column3
+% <-> planeC.
+% nsx stands for 'noise x'. Refers to the x coordinate of the created
+% noise.
+
+%%%%%%%%%% DATA COMBINATION AND SORTING %%%%%%%%%%
+x = [smx; nsxS; nsxL; nsxR; nsxBM; nsxT];
+y = [smy; nsyS; nsyL; nsyR; nsyBM; nsyT];
+z = [smz; nszS; nszL; nszR; nszBM; nszT];
+
+% Two possibilites. Track 1 first and Track 2 second in list, or viceversa.
+smxyz = [smx; smy; smz];
+smxyz_flipped = zeros(6, 3);
+smxyz_flipped([1 2 3 4 5 6], :) = smxyz([2 1 4 3 6 5], :);
+
+%%%%%%%%%% GOODNESS OF FIT TEST %%%%%%%%%%
+% Null transformation values.
+[bestx, besty, bestz, minmOisdiff, verticesmin0] = goodnessOfFit(x, y, z);
+nulltransxyz = [bestx; besty; bestz];
+minmOisdiff_nulltrans = minmOisdiff;
+
+% First transformation values.
+[besty, bestx, bestz, minmOisdiff, verticesmin0] = goodnessOfFit(y, -x, z);
+firsttransxyz = [-bestx; besty; bestz];
+minmOisdiff_firsttrans = minmOisdiff;
+
+decaytracks = [];   % rows 1, 2 <-> x's1, x's2, respectively; rows 3, 4 <->
+                    % y's1, y's2, respectively; rows 5, 6 <-> z's1, z's2,
+                    % respectively; columns 1, 2, 3 <-> planes A, B, C,
+                    % respectively.
+                    
+% Check which transformation gives better results. Analyses the cases for
+% 'empty' results as well.
+nulltransxyz
+firsttransxyz
+if isempty(minmOisdiff_nulltrans) == 1
+    decaytracks = [firsttransxyz(2, :); firsttransxyz(1, :);
+            firsttransxyz(4, :); firsttransxyz(3, :);
+            firsttransxyz(6, :); firsttransxyz(5, :)];
+elseif isempty(minmOisdiff_firsttrans) == 1
+    decaytracks = nulltransxyz;
+else
+    if minmOisdiff_nulltrans < minmOisdiff_firsttrans
+        decaytracks = nulltransxyz;
+    elseif minmOisdiff_nulltrans > minmOisdiff_firsttrans
+        decaytracks = [firsttransxyz(2, :); firsttransxyz(1, :);
+            firsttransxyz(4, :); firsttransxyz(3, :);
+            firsttransxyz(6, :); firsttransxyz(5, :)];
+    end
+end
+
+smxyz;
+firsttransxyz;
+nulltransxyz;
+decaytracks;
+
+% Limit decimal places to 3.
+smxyz = round(smxyz*1000)/1000
+decaytracks = round(decaytracks*1000)/1000
+
+decaytracka = [decaytracks(1, :); decaytracks(3, :); decaytracks(5, :)];
+decaytrackb = [decaytracks(2, :); decaytracks(4, :); decaytracks(6, :)];
+smxyza = [smxyz(1, :); smxyz(3, :); smxyz(5, :)];
+smxyzb = [smxyz(2, :); smxyz(4, :); smxyz(6, :)];
+
+[suma, sumb] = sumation(decaytracka, decaytrackb, smxyza, smxyzb);
+
+count = 0;
+if suma >= 2 && sumb >= 2
+    count = count + 1
+    verticesmin0
+end
+
+end

@@ -1,0 +1,21 @@
+% LEAST-SQUARES 3D "STRAIGHT AHEAD" CASE
+
+function [lfitarray, mfitarray, nfitarray, c] = linfit3Dpts_Sface(l, m, n)
+
+% Transformation of space is couterclockwise rotation of z axis when
+% looking from +z to -z by 90 degrees for 0 rotation angle for decay plane.
+
+nfitarray = [linspace(0, -4.80+2.40, 50) linspace(-4.81+2.40, -5.30+2.40, 50) ...
+    linspace(-5.31+2.40, -5.60+2.40, 50) linspace(-5.61+2.40, -7+2.40, 50)];
+
+% n-l plane.
+d = linfit2Dparams_Sface(n, l);
+
+lfitarray = d(1) .* nfitarray + d(2);
+
+% m dimenstion.
+c = linfit3Dparams_Sface(n, l, m);
+
+mfitarray = c(1) .* nfitarray + c(2) .* lfitarray + c(3);
+
+end

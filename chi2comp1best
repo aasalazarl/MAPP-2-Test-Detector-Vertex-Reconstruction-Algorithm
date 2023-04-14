@@ -1,0 +1,36 @@
+% CHI-SQUARE COMPARISON FOR CHOOSING THE BEST ONES
+
+function indicesbest = chi2comp1best(chi2comp1)
+
+% Best chi-squared results compared to 0.5 (previously 1) extraction.
+file1 = fopen('chi2comp1best.txt', 'w');
+
+for i = linspace(1, length(chi2comp1), length(chi2comp1))
+    if chi2comp1(i) < 0.5 & chi2comp1(i) > 0
+        fprintf(file1, '%5f\n', chi2comp1(i));
+    end
+end
+
+chi2comp1best = importdata('chi2comp1best.txt');
+% Handle in matrix form.
+csvwrite('chi2comp1best.txt', chi2comp1best);
+chi2comp1best = importdata('chi2comp1best.txt');
+    
+ 
+% Identify indices of best data points.
+file2 = fopen('indicesbest.txt', 'w');
+
+for i = linspace(1, length(chi2comp1), length(chi2comp1))
+    for j = linspace(1, length(chi2comp1best), length(chi2comp1best))
+        if chi2comp1(i) == chi2comp1best(j)
+            fprintf(file2, '%5f\n', i);
+        end
+    end
+end
+
+indicesbest = importdata('indicesbest.txt');
+%Handle in matrix form
+csvwrite('indicesbest.txt', indicesbest);
+indicesbest = importdata('indicesbest.txt');
+
+end

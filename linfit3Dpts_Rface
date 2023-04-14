@@ -1,0 +1,21 @@
+% LEAST-SQUARES 3D RIGHT CASE
+
+function [lfitarray, mfitarray, nfitarray, c] = linfit3Dpts_Rface(l, m, n)
+
+% Transformation of space is couterclockwise rotation of z axis when
+% looking from +z to -z by 90 degrees for 0 rotation angle for decay plane.
+
+lfitarray = [linspace(0, 1.50, 50) linspace(1.51, 1.8, 50), ...
+    linspace(1.81, 2.1, 50) linspace(2.11, 3, 50)];
+
+% n-l plane.
+d = linfit2Dparams_LRfaces(l, m);
+
+mfitarray = d(1) .* lfitarray + d(2);
+
+% m dimenstion.
+c = linfit3Dparams_LRfaces(l, m, n);
+
+nfitarray = c(1) .* lfitarray + c(2) .* mfitarray + c(3);
+
+end

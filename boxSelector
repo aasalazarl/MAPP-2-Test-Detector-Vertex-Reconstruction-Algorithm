@@ -1,0 +1,60 @@
+# BOX SELECTOR
+
+# Scatter points selector.
+
+def selectorTrack1(xS, xL, xB, 
+                    zS, zL, zB,
+                    yS, yL, yB,
+                    boxLetter, d):
+    print(yB, xB, zB)
+    
+    if boxLetter == 'A':
+        xLeft = -1.50
+        yTop = 1.50
+        zStraight = -2.40
+    elif boxLetter == 'B':
+        xLeft = -1.50 - d
+        yTop = 1.50 + d
+        zStraight = -5.30 + 2.40
+    elif boxLetter == 'C':
+        xLeft = -1.50 - 2*d
+        yTop = 1.50 + 2*d
+        zStraight = -5.60 + 2.40
+        
+    if zS == zStraight and (xS >= xLeft and xS < 0) and (yS <= yTop and yS >= -yTop):
+        face = 1
+    elif xL == xLeft and (zL >= zStraight and zL <= 0) and (yL <= yTop and yL >= -yTop):
+        face = 2
+    elif yB == -yTop and (xB >= xLeft and xB < 0) and (zB >= zStraight and zB < 0):
+        face = 3
+    #print(face)
+    return face # 1 = S, 2 = LR, 3 = TB
+
+def selectorTrack2(xS, xR, xT,
+                   zS, zR, zT,
+                   yS, yR, yT,
+                   boxLetter, d):
+    
+    if yT < 0:
+        yT = -yT
+    if boxLetter == 'A':
+        xRight = 1.50
+        yTop = 1.50
+        zStraight = -2.40
+    elif boxLetter == 'B':
+        xRight = 1.50 + d
+        yTop = 1.50 + d
+        zStraight = -5.3 + 2.40
+    elif boxLetter == 'C':
+        xRight = 1.50 + 2*d
+        yTop = 1.50 + 2*d
+        zStraight = -5.60 + 2.40
+        
+    if zS == zStraight and (xS <= xRight and xS > 0) and (yS <= yTop or yS >= -yTop):
+        face = 1
+    elif xR == xRight and (zR >= zStraight and zR <= 0) and (yR <= yTop or yR >= -yTop):
+        face = 2
+    elif yT == yTop and (xT <= xRight and xT > 0) and (zT >= zStraight and zT < 0):
+        face = 3
+        
+    return face # 1 = S, 2 = LR, 3 = TB

@@ -1,0 +1,14 @@
+% Z DATA IMPORT
+
+\begin{lstlisting}[language=matlab]
+function [z1A, z1B, z1C, z2A, z2B, z2C] = zdataImport(i)
+
+z1A = importdata('z1A.txt'); z2A = importdata('z2A.txt');
+z1B = importdata('z1B.txt'); z2B = importdata('z2B.txt');
+z1C = importdata('z1C.txt'); z2C = importdata('z2C.txt');
+
+z1A = z1A(i); z2A = z2A(i);
+z1B = z1B(i); z2B = z2B(i);
+z1C = z1C(i); z2C = z2C(i);
+
+end

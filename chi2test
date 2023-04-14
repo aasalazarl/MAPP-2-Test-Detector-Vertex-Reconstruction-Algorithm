@@ -1,0 +1,47 @@
+% CHI-SQUARE TEST
+
+function chi2comp1 = chi2test(observeddumms, expecteddumms, sigma)
+
+file1 = fopen('chi2results.txt', 'w');
+for i = linspace(1, length(observeddumms)/3, length(observeddumms)/3)
+    
+    lfitdumm = observeddumms(i + 2*(i-1), :);
+    mfitdumm = observeddumms((i + 2*(i-1)) + 1, :);
+    
+    ldumm = expecteddumms(i + 2*(i-1), :);
+    mdumm = expecteddumms((i + 2*(i-1)) + 1, :);
+    
+    % Chi2 goodness of fit evaulation. See chi2test.pdf.
+    Sl = sum((lfitdumm - ldumm).^2 ./ sigma.^2);
+    Sm = sum((mfitdumm - mdumm).^2 ./ sigma.^2);
+    S = Sl + Sm;    % chi-squared value.
+    dof = 6;    % deg of freedom.
+    ndatpts = 9;    % number of data points.
+    nu = ndatpts - dof;
+    %chi2result = S/nu;
+    syms x
+    f = (x^(nu/2 -1) * exp(-x/2))/(2^(nu/2) * gamma(x/2));
+    chi2result = int(f, S, inf);
+    
+    
+    fprintf(file1, '%5f\n', chi2result);
+end
+ 
+chi2results = importdata('chi2results.txt');
+ 
+% Compare chi-squared goodness of fit results to 1. The closer to 1, the
+% better the fit is.
+file2 = fopen('chi2comp1.txt', 'w');  % comp1 stands for comparison to 1.
+
+for i = linspace(1, length(chi2results), length(chi2results))
+    chi2comp1dumm = abs(0.5 - chi2results(i));
+
+    fprintf(file2, '%5f\n', chi2comp1dumm);
+end
+
+chi2comp1 = importdata('chi2comp1.txt');
+% Access chi-squared results compared to 1 in matrix form.
+csvwrite('chi2comp1.txt', chi2comp1);
+chi2comp1 = importdata('chi2comp1.txt');
+
+end

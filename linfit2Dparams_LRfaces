@@ -1,0 +1,25 @@
+% LINEAR FIT 2D PARAMETERS GENERATOR FOR LEFT RIGHT CASES
+
+function [c] = linfit2Dparams_LRfaces(m, n)
+% linefit    Least-squares fit of data to y = c(1)*x + c(2)
+%
+% Synopsis:   c     = linfit2Dparams(l, m)
+%            [c,norm_r] = linfit2Dparams(l, m)
+%
+% Input:   l, m = vectors of independent and dependent variables
+%
+% Output:  c  = vector of slope, c(1), and intercept, c(2)
+%               of least sq. line fit
+%          norm_r = (optional) norm of residual
+
+if length(n)~= length(m),  error('x and y are not compatible');  end
+
+m = m(:);  n = n(:);    %  Make sure that x and y are column vectors
+A = [m ones(size(m))];  %  m-by-n matrix of overdetermined system
+c = (A'*A)\(A'*n);      %  Solve normal equations
+
+    % if nargout>1
+    %   r = m - A*c;
+    %   norm_r = norm(r);
+
+end

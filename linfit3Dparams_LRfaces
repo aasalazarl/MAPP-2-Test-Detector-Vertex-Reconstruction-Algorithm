@@ -1,0 +1,31 @@
+% LINEAR FIT 3D PARAMETERS GENERATOR FOR LEFT AND RIGHT CASES
+
+function [d] = linfit3Dparams_LRfaces(l, m, n)
+% linefit    Least-squares fit of data to z = c(1)*x + c(2)*y + c*(3)
+%
+% Synopsis:   d     = linfit3Dparams(l, m, n)
+%            [d, norm_r] = linfit3Dparams(l, m, n)
+%
+% Input:   l, m, n = vectors of independent and dependent variables
+%
+% Output:  d  = slope parameters d(1) for l, d(2) for m, and intercept d(3)
+%               for n
+%          norm_r = (optional) norm of residual
+
+
+if length(l) == length(m) && length(l) == length(n)
+    l = l(:);  m = m(:); n = n(:);  % make sure that l and m are column 
+                                    % vectors.
+    A = [m n ones(size(m))];    % M-by-N matrix of overdetermined system.
+    d = (A'*A)\(A'*l);  % solve normal equations.
+    
+%     if nargout>1
+%         r = y - A*d;
+%         norm_r = norm(r);
+%     end
+
+else
+    error('x and y are not compatible'); 
+end
+
+end

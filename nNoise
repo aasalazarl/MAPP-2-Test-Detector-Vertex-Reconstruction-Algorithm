@@ -1,0 +1,14 @@
+% NUMBER OF NOISE POINTS
+
+function [nNoiseA, nNoiseB, nNoiseC] = nNoise
+
+% Up to 50 noise points per plane.
+% % nNoiseA = round(50 * rand(1));
+% % nNoiseB = round(50 * rand(1));
+% % nNoiseC = round(50 * rand(1));
+
+nNoiseA = 10;
+nNoiseB = 10;
+nNoiseC = 10;
+
+end

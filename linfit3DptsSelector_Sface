@@ -1,0 +1,26 @@
+% LINEAR FIT POINT SELECTOR FOR "STRAIGHT AHEAD" CASE
+
+function [lfit, mfit, nfit, c] = linfit3DptsSelector_Sface(l, m, n)
+
+[lfitarray, mfitarray, nfitarray, cdumm] = linfit3Dpts_Sface(l, m, n);
+
+lfit = zeros(1, 3); mfit = zeros(1, 3); nfit = zeros(1, 3);
+c = cdumm;
+for i = linspace(1, length(nfitarray), length(nfitarray))
+    lfitarray(i);
+    if nfitarray(i) == -4.80+2.40
+        lfit(1, 1) = lfitarray(i);
+        mfit(1, 1) = mfitarray(i);
+        nfit(1, 1) = nfitarray(i);
+    elseif nfitarray(i) == -5.30+2.40
+        lfit(1, 2) = lfitarray(i);
+        mfit(1, 2) = mfitarray(i);
+        nfit(1, 2) = nfitarray(i);
+    elseif nfitarray(i) == -5.60+2.40
+        lfit(1, 3) = lfitarray(i);
+        mfit(1, 3) = mfitarray(i);
+        nfit(1, 3) = nfitarray(i);
+    end
+end
+
+end

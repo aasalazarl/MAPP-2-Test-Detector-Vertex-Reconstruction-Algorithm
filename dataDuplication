@@ -1,0 +1,36 @@
+% DATA DUPLICATION
+
+function smc = duplication(cinput)
+
+% Creates two hit points per two optical fibers adjacent to the real hit.
+
+smc1 = [[0 0 0]; [0 0 0]];
+smc2 = [[0 0 0]; [0 0 0]];
+
+smc = [[0 0 0]; [0 0 0]];
+
+
+for i = linspace(1, 6, 6)
+    xmin=0;
+    xmax=0.01;
+    n=1;
+    x=xmin+rand(1,n)*(xmax-xmin);
+    
+    smc1(i) = cinput(i) + x;
+    smc2(i) = cinput(i) - (0.01 - x);
+
+end
+
+for i = linspace(1, 6, 6)
+    if smc1(i) < smc2(i)
+        smc(i) = smc1(i);
+    elseif smc2(i) < smc1(i)
+        smc(i) = smc2(i);
+    elseif smc1(i) == smc2(i)
+        r = randi([0, 1], [1, 1]) + 1;
+        op = [smc1(i) smc2(i)];
+        smc(i) = op(r);
+    end
+end 
+
+end

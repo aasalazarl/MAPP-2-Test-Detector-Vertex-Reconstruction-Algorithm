@@ -1,0 +1,13 @@
+% X DATA IMPORT
+
+function [x1A, x1B, x1C, x2A, x2B, x2C] = xdataImport(i)
+
+x1A = importdata('x1A.txt'); x2A = importdata('x2A.txt');
+x1B = importdata('x1B.txt'); x2B = importdata('x2B.txt');
+x1C = importdata('x1C.txt'); x2C = importdata('x2C.txt');
+
+x1A = x1A(i); x2A = x2A(i);
+x1B = x1B(i); x2B = x2B(i);
+x1C = x1C(i); x2C = x2C(i);
+
+end

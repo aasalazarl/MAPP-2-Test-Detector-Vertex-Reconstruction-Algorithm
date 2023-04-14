@@ -1,0 +1,260 @@
+% "SUMATION" COMPLEMENT TO ptintersecttest code
+
+function [suma, sumb] = sumation(decaytracka, decaytrackb, smxyza, smxyzb)
+
+letter = []; % indentifies which track you will be looking at 0 for 'a'
+             % and 1 for 'b'; 2 for 'none'.             
+             
+% Letter identifier
+for j = linspace(1, 3, 3)
+    if abs(decaytracka(1,j) - smxyza(1,j)) <= 0.001
+        letter = 0;
+    elseif abs(decaytracka(1,j) - smxyzb(1,j)) <= 0.001
+        letter = 1;   
+    elseif abs(decaytracka(1,j) - smxyza(1,j)) > 0.001 || abs(decaytracka(1,j) - smxyzb(1,j)) > 0.001
+        if abs(decaytracka(2,j) - smxyza(2,j)) <= 0.001
+            letter = 0;
+        elseif abs(decaytracka(2,j) - smxyzb(2,j)) <= 0.001
+            letter = 1;  
+        elseif abs(decaytracka(2,j) - smxyza(2,j)) > 0.001 || abs(decaytracka(2,j) - smxyzb(2,j)) > 0.001
+            if abs(decaytracka(3,j) - smxyza(3,j)) <= 0.001
+                letter = 0;
+            elseif abs(decaytracka(3,j) - smxyzb(3,j)) <= 0.001
+                letter = 1;
+            elseif abs(decaytracka(3,j) - smxyza(3,j)) > 0.001 || abs(decaytracka(3,j) - smxyzb(3,j)) > 0.001
+                letter = 2;
+            end
+        end
+    end
+end
+
+letter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if letter == 0
+    
+    % Track a
+    xindices = []; yindices = []; zindices = [];
+    correctSumCounta = [];
+    
+    % xindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(1,j) - smxyza(1,j)) <= 0.0015
+            xindices = [xindices j];
+        elseif abs(decaytracka(1,j) - smxyza(1,j)) > 0.0015
+            xindices = [xindices 0];
+        end
+    end
+    % yindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(2,j) - smxyza(2,j)) <= 0.0015
+            yindices = [yindices j];
+        elseif abs(decaytracka(2,j) - smxyza(2,j)) > 0.0015
+            yindices = [yindices 0];
+        end
+    end
+    % zindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(3,j) - smxyza(3,j)) <= 0.0015
+            zindices = [zindices j];
+        elseif abs(decaytracka(3,j) - smxyza(3,j)) > 0.0015
+            zindices = [zindices 0];
+        end
+    end
+
+    Acount = sum(xindices(:, 1)) + sum(yindices(:, 1)) + sum(zindices(:, 1));
+    Bcount = sum(xindices(:, 2)) + sum(yindices(:, 2)) + sum(zindices(:, 2));
+    Ccount = sum(xindices(:, 3)) + sum(yindices(:, 3)) + sum(zindices(:, 3));
+
+    if Acount == 3
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    if Bcount == 6
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    if Ccount == 9
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    suma = sum(correctSumCounta);
+
+    % Track b
+    xindices = []; yindices = []; zindices = [];
+    correctSumCountb = [];
+    
+    % xindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(1,j) - smxyzb(1,j)) <= 0.0015
+            xindices = [xindices j];        
+        elseif abs(decaytrackb(1,j) - smxyzb(1,j)) > 0.0015
+            xindices = [xindices 0];
+        end
+    end
+    % yindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(2,j) - smxyzb(2,j)) <= 0.0015
+            yindices = [yindices j];
+        elseif abs(decaytrackb(2,j) - smxyzb(2,j)) > 0.0015
+            yindices = [yindices 0];
+        end
+    end
+% zindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(3,j) - smxyzb(3,j)) <= 0.0015
+            zindices = [zindices j];
+        elseif abs(decaytrackb(3,j) - smxyzb(3,j)) > 0.0015
+            zindices = [zindices 0];
+        end
+    end
+
+    Acount = sum(xindices(:, 1)) + sum(yindices(:, 1)) + sum(zindices(:, 1));
+    Bcount = sum(xindices(:, 2)) + sum(yindices(:, 2)) + sum(zindices(:, 2));
+    Ccount = sum(xindices(:, 3)) + sum(yindices(:, 3)) + sum(zindices(:, 3));
+
+    if Acount == 3
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    if Bcount == 6
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    if Ccount == 9
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    sumb = sum(correctSumCountb);
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+elseif letter == 1
+    
+    % Track a
+    xindices = []; yindices = []; zindices = [];
+    correctSumCounta = [];
+    
+    % xindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(1,j) - smxyzb(1,j)) <= 0.0015
+            xindices = [xindices j];
+        elseif abs(decaytracka(1,j) - smxyzb(1,j)) > 0.0015
+            xindices = [xindices 0];
+        end
+    end
+    % yindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(2,j) - smxyzb(2,j)) <= 0.0015
+            yindices = [yindices j];
+        elseif abs(decaytracka(2,j) - smxyzb(2,j)) > 0.0015
+            yindices = [yindices 0];
+        end
+    end
+    % zindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytracka(3,j) - smxyzb(3,j)) <= 0.0015
+            zindices = [zindices j];
+        elseif abs(decaytracka(3,j) - smxyzb(3,j)) > 0.0015
+            zindices = [zindices 0];
+        end
+    end
+
+    Acount = sum(xindices(:, 1)) + sum(yindices(:, 1)) + sum(zindices(:, 1));
+    Bcount = sum(xindices(:, 2)) + sum(yindices(:, 2)) + sum(zindices(:, 2));
+    Ccount = sum(xindices(:, 3)) + sum(yindices(:, 3)) + sum(zindices(:, 3));
+
+    if Acount == 3
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    if Bcount == 6
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    if Ccount == 9
+        correctSumCounta = [correctSumCounta 1];
+    else
+        correctSumCounta = [correctSumCounta 0];
+    end
+
+    suma = sum(correctSumCounta);
+
+    % Track b
+    xindices = []; yindices = []; zindices = [];
+    correctSumCountb = [];
+    
+    % xindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(1,j) - smxyza(1,j)) <= 0.0015
+            xindices = [xindices j];        
+        elseif abs(decaytrackb(1,j) - smxyza(1,j)) > 0.0015
+            xindices = [xindices 0];
+        end
+    end
+    % yindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(2,j) - smxyza(2,j)) <= 0.0015
+            yindices = [yindices j];
+        elseif abs(decaytrackb(2,j) - smxyza(2,j)) > 0.0015
+            yindices = [yindices 0];
+        end
+    end
+% zindices
+    for j = linspace(1, 3, 3)
+        if abs(decaytrackb(3,j) - smxyza(3,j)) <= 0.0015
+            zindices = [zindices j];
+        elseif abs(decaytrackb(3,j) - smxyza(3,j)) > 0.0015
+            zindices = [zindices 0];
+        end
+    end
+
+    Acount = sum(xindices(:, 1)) + sum(yindices(:, 1)) + sum(zindices(:, 1));
+    Bcount = sum(xindices(:, 2)) + sum(yindices(:, 2)) + sum(zindices(:, 2));
+    Ccount = sum(xindices(:, 3)) + sum(yindices(:, 3)) + sum(zindices(:, 3));
+
+    if Acount == 3
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    if Bcount == 6
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    if Ccount == 9
+        correctSumCountb = [correctSumCountb 1];
+    else
+        correctSumCountb = [correctSumCountb 0];
+    end
+
+    sumb = sum(correctSumCountb);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+elseif letter == 2
+    suma = 0;
+    sumb = 0;
+end
+
+suma
+sumb
+
+end

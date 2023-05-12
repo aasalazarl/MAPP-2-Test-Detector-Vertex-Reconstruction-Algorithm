@@ -3,14 +3,14 @@ Neutral Particles With the MoEDAL-MAPP Detector" at the University of Alberta
 
 The following codes should be run in the environments and order indicated
 
-Part 1: Simulated Real Decay Algorithm (for Python)
+Part 1: Simulated Real Decay Algorithm (for Python [Spyder 3.9])
 
 The following code generates a simulated real decay, and it is based on the geometrical arguments presented in the "Geometric Arguments" pdf file:
 01 vertexGenerator
 02 boxGenerator
 03 boxSelector
 
-Part 2: Vertex Reconstruction Algorithm (for Matlab)
+Part 2: Vertex Reconstruction Algorithm (for Matlab v. R2020a)
 
 The following code is presented in the order in which it is used. The purpose of this algorithm is to reconstruct the simulated real vertices generated 
 with the code in Part 1:
